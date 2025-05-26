@@ -41,12 +41,10 @@ npm install
 ```
 
 ### 3. Konfigurasi file .env
-```
-Buat file .env di root berdasarkan file .env.example
-```
-```
-Masukkan kredensial Supabase milikmu:
 
+Buat file .env di root berdasarkan file .env.example
+Masukkan kredensial Supabase milikmu:
+```
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
