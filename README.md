@@ -22,4 +22,11 @@ Website Himpunan adalah aplikasi web yang dikembangkan menggunakan **React** dan
 
 ---
 
+## 🧪 Fitur Tambahan (Opsional)
+
+- **Login Admin**: Autentikasi login berbasis Supabase.
+- **CRUD Event & Anggota**: Dashboard admin dapat mengelola data.
+- **Struktur Divisi**: Anggota dibagi dalam 7 divisi berbeda.
+- **Tampilan Responsif**: Dapat diakses dari berbagai perangkat.
+
 
