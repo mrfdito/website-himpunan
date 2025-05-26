@@ -23,3 +23,26 @@ Website Himpunan adalah aplikasi web yang dikembangkan menggunakan **React** dan
 ---
 
 ## 📂 Struktur Proyek
+
+🚀 Fitur Tambahan (Opsional)
+Login Admin: Autentikasi login berbasis Supabase.
+CRUD Event & Anggota: Dashboard admin dapat mengelola data event dan anggota.
+Struktur Divisi: Anggota dibagi ke dalam 7 divisi berbeda.
+Tampilan Responsif: Aplikasi dapat diakses dari berbagai perangkat.
+⚙️ Cara Menjalankan Proyek
+1. Klon Repositori Ini
+Bash
+
+git clone https://github.com/mrfdito/website-himpunan.git
+cd website-himpunan
+2. Instal Dependensi
+Bash
+
+npm install
+3. Konfigurasi File .env
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-anon-key
+4. Jalankan Aplikasi
+Bash
+
+npm run dev
