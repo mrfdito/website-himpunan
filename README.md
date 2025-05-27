@@ -30,12 +30,14 @@ Website Himpunan adalah aplikasi web yang dikembangkan menggunakan **React** dan
 - **Tampilan Responsif**: Dapat diakses dari berbagai perangkat.
 
 ### 1. Klon repositori ini
+
 ```bash
 git clone https://github.com/mrfdito/website-himpunan.git
 cd website-himpunan
 ```
 
 ### 2. Instal dependensi
+
 ```
 npm install
 ```
@@ -44,14 +46,14 @@ npm install
 
 Buat file .env di root berdasarkan file .env.example
 Masukkan kredensial Supabase milikmu:
+
 ```
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### 4. Jalankan aplikasi
+
 ```
 npm run dev
 ```
-
-
