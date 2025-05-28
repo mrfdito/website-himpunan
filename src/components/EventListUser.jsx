@@ -12,7 +12,8 @@ const EventListUser = () => {
       if (error) {
         console.error("Gagal fetch events:", error);
       } else {
-        setEvents(data);
+        // Limit to 8 events for display consistency with the image, or adjust as needed
+        setEvents(data.slice(0, 8));
       }
       setLoading(false);
     };
@@ -24,27 +25,57 @@ const EventListUser = () => {
   if (!events.length) return <p>Tidak ada event tersedia.</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {events.map((event) => (
-        <div
-          key={event.id}
-          className="border rounded p-4 shadow hover:shadow-lg transition-shadow duration-300"
-        >
-          {event.gambar_url && (
-            <img
-              src={event.gambar_url}
-              alt={event.judul}
-              className="w-full h-80 object-cover rounded mb-3"
-            />
-          )}
-          <h2 className="text-xl font-semibold mb-1">{event.judul}</h2>
-          <p className="text-gray-700 mb-2 line-clamp-3">{event.deskripsi}</p>
-          <p className="text-sm text-gray-500">
-            <strong>Tanggal:</strong> {event.tanggal} <br />
-            <strong>Lokasi:</strong> {event.lokasi}
-          </p>
-        </div>
-      ))}
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold mb-6">Acara dan Berita</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {events.map((event) => (
+          <div
+            key={event.id}
+            className="flex items-center border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
+          >
+            {/* Image Placeholder - simplified for demonstration */}
+            <div className="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0">
+              {/* You can still use event.gambar_url here if available and it fits this smaller size */}
+              {event.gambar_url && (
+                <img
+                  src={event.gambar_url}
+                  alt={event.judul}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              )}
+            </div>
+
+            <div className="flex-grow ml-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-1">
+                {event.judul || "Pentasan Seni Lorem"}
+              </h3>
+              <p className="text-sm text-gray-600 line-clamp-2">
+                {event.deskripsi ||
+                  "Ini adalah detail dari acaranya dan apapun keterangannya oleh."}
+              </p>
+              <button className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                Detail <span className="ml-1">&gt;</span>
+              </button>
+            </div>
+
+            {/* Date Section - aligned to the right */}
+            <div className="flex-shrink-0 ml-4 text-right">
+              {event.tanggal && (
+                <>
+                  <p className="text-sm font-bold text-orange-500 uppercase">
+                    {new Date(event.tanggal).toLocaleString("id-ID", {
+                      month: "short",
+                    })}
+                  </p>
+                  <p className="text-3xl font-bold text-gray-800">
+                    {new Date(event.tanggal).getDate()}
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
