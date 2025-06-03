@@ -8,6 +8,7 @@ import AdminLogin from "./components/AdminLogin";
 import Dashboard from "./pages/Dashboard";
 import Event from "./pages/Event";
 import Members from "./pages/Members";
+import DetailEvent from "./components/DetailEvent";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/event" element={<Event />} />
               <Route path="/members" element={<Members />} />
+              <Route path="/event/:id" element={<DetailEvent />} />
             </Routes>
           </div>
         </div>
