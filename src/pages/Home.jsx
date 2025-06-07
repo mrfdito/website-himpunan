@@ -1,4 +1,5 @@
 import React from "react";
+import logoFooter from "../assets/logo-footer.png";
 
 const Home = () => {
   return (
@@ -124,7 +125,7 @@ const Home = () => {
           {/* Logo */}
           <div className="flex justify-center md:justify-start pl-10">
             <img
-              src="/src/assets/logo-footer.png"
+              src={logoFooter}
               alt="Logo Himpunan"
               className="w-40 h-40 object-contain"
             />
