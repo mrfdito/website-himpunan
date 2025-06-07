@@ -45,7 +45,7 @@ const DetailEvent = () => {
       <h1 className="text-4xl font-bold mb-4 text-gray-800">{event.judul}</h1>
 
       {/* Tanggal */}
-      <p className="text-gray-500 text-sm mb-4">
+      <p className="text-gray-500 text-sm mb-2">
         {new Date(event.tanggal).toLocaleDateString("id-ID", {
           weekday: "long",
           day: "numeric",
@@ -53,6 +53,13 @@ const DetailEvent = () => {
           year: "numeric",
         })}
       </p>
+
+      {/* Lokasi */}
+      {event.lokasi && (
+        <p className="text-gray-600 text-sm mb-4">
+          📍 <span className="font-medium">{event.lokasi}</span>
+        </p>
+      )}
 
       {/* Gambar */}
       {event.gambar_url && (

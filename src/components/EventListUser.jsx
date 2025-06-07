@@ -1,172 +1,152 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import CarouselEventList from "./CarouselEventList"; // import carousel
 
 const EventListUser = () => {
   const [events, setEvents] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterMonth, setFilterMonth] = useState("");
-  const [sortOrder, setSortOrder] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
       const { data, error } = await supabase.from("event").select("*");
-
       if (error) {
         console.error("Gagal fetch events:", error);
       } else {
         setEvents(data);
       }
     };
-
     fetchEvents();
   }, []);
 
-  // Filter dan sorting
-  const filteredEvents = events
-    .filter((event) => {
-      const lowerQuery = searchQuery.toLowerCase();
-      const eventText = `${event.judul} ${event.deskripsi}`.toLowerCase();
-      const matchSearch = eventText.includes(lowerQuery);
-
-      const matchMonth = filterMonth
-        ? new Date(event.tanggal).getMonth() + 1 === parseInt(filterMonth)
-        : true;
-
-      return matchSearch && matchMonth;
-    })
-    .sort((a, b) => {
-      const dateA = new Date(a.tanggal);
-      const dateB = new Date(b.tanggal);
-      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
-    });
-
-  // Pagination
-  const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedEvents = filteredEvents.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-
+  const totalPages = Math.ceil(events.length / itemsPerPage);
   const goToPage = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
   };
 
+  const filteredEvents = events
+    .filter(
+      (event) =>
+        event.judul.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.deskripsi.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      const now = new Date();
+      const dateA = new Date(a.tanggal);
+      const dateB = new Date(b.tanggal);
+      const isPastA = dateA < now;
+      const isPastB = dateB < now;
+      if (isPastA && !isPastB) return 1;
+      if (!isPastA && isPastB) return -1;
+      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    });
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedEvents = filteredEvents.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // Ambil 3 event terdekat untuk carousel (hanya event masa depan, ascending)
+  const now = new Date();
+  const upcomingEvents = events
+    .filter((e) => new Date(e.tanggal) >= now)
+    .sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal))
+    .slice(0, 3);
+
+  if (!events.length)
+    return <p className="text-center">Tidak ada event tersedia.</p>;
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-6">Acara dan Berita</h2>
+      {/* Carousel dengan 3 event terdekat */}
+      <CarouselEventList events={upcomingEvents} />
 
-      {/* Search, Filter, Sort */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        {/* Search */}
-        <input
-          type="text"
-          placeholder="Cari event..."
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full md:w-1/3 px-4 py-2 border rounded-lg"
-        />
-
-        {/* Filter Bulan */}
-        <select
-          value={filterMonth}
-          onChange={(e) => {
-            setFilterMonth(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full md:w-1/4 px-4 py-2 border rounded-lg"
-        >
-          <option value="">Filter Bulan</option>
-          {Array.from({ length: 12 }).map((_, idx) => (
-            <option key={idx} value={idx + 1}>
-              {new Date(0, idx).toLocaleString("id-ID", { month: "long" })}
-            </option>
-          ))}
-        </select>
-
-        {/* Sorting */}
-        <select
-          value={sortOrder}
-          onChange={(e) => {
-            setSortOrder(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full md:w-1/4 px-4 py-2 border rounded-lg"
-        >
-          <option value="desc">Terbaru ke Terlama</option>
-          <option value="asc">Terlama ke Terbaru</option>
-        </select>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 mt-8">
+        <h2 className="text-3xl font-bold">Acara dan Berita</h2>
+        <div className="flex gap-4">
+          <input
+            type="text"
+            placeholder="Cari event..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
+          />
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
+          >
+            <option value="asc">Terdekat</option>
+            <option value="desc">Terlama</option>
+          </select>
+        </div>
       </div>
 
-      {/* Event Cards */}
-      {paginatedEvents.length === 0 ? (
-        <p className="text-center text-gray-500">Tidak ada event yang cocok.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {paginatedEvents.map((event) => (
-            <div
-              key={event.id}
-              className="flex items-center border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
-            >
-              {/* Gambar */}
-              <div className="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0">
-                {event.gambar_url && (
-                  <img
-                    src={event.gambar_url}
-                    alt={event.judul}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                )}
-              </div>
-
-              {/* Konten */}
-              <div className="flex-grow ml-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-1">
-                  {event.judul}
-                </h3>
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {event.deskripsi}
-                </p>
-                <button
-                  onClick={() => navigate(`/event/${event.id}`)}
-                  className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
-                >
-                  Detail &gt;
-                </button>
-              </div>
-
-              {/* Tanggal */}
-              <div className="flex-shrink-0 ml-4 text-right">
-                {event.tanggal && (
-                  <>
-                    <p className="text-sm font-bold text-orange-500 uppercase">
-                      {new Date(event.tanggal).toLocaleString("id-ID", {
-                        month: "short",
-                      })}
-                    </p>
-                    <p className="text-3xl font-bold text-gray-800">
-                      {new Date(event.tanggal).getDate()}
-                    </p>
-                  </>
-                )}
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {paginatedEvents.map((event) => (
+          <div
+            key={event.id}
+            className="flex items-center border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
+          >
+            <div className="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0">
+              {event.gambar_url && (
+                <img
+                  src={event.gambar_url}
+                  alt={event.judul}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              )}
             </div>
-          ))}
-        </div>
-      )}
+            <div className="flex-grow ml-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-1">
+                {event.judul || "Judul Event"}
+              </h3>
+              <p className="text-sm text-gray-600 line-clamp-2">
+                {event.deskripsi || "Deskripsi singkat event."}
+              </p>
+              <button
+                onClick={() => navigate(`/event/${event.id}`)}
+                className="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                Detail <span className="ml-1">&gt;</span>
+              </button>
+            </div>
+            <div className="flex-shrink-0 ml-4 text-right">
+              {event.tanggal && (
+                <>
+                  <p className="text-sm font-bold text-orange-500 uppercase">
+                    {new Date(event.tanggal).toLocaleString("id-ID", {
+                      month: "short",
+                    })}
+                  </p>
+                  <p className="text-3xl font-bold text-gray-800">
+                    {new Date(event.tanggal).getDate()}
+                  </p>
+                  {new Date(event.tanggal) < new Date() && (
+                    <p className="text-xs mt-1 text-red-500 font-semibold">
+                      Sudah Lewat
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex flex-wrap justify-center md:justify-end space-x-2">
+        <div className="flex flex-wrap justify-center space-x-2">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
