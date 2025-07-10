@@ -56,30 +56,24 @@ const Home = () => {
             <div>
               <h3 className="text-2xl font-bold mb-3">Visi</h3>
               <p className="text-base md:text-lg leading-relaxed">
-                Menjadi organisasi mahasiswa Ilmu Komputer yang unggul dalam
-                pengembangan akademik, kreativitas, dan kontribusi sosial, serta
-                mampu mencetak kader-kader profesional di bidang teknologi.
+                Menjadi himpunan mahasiswa yang menciptakan perubahan positif
+                dari inisiatif-inisiatif kecil yang berdampak besar dalam waktu
+                singkat melalui program-program inovatif dan kolaboratif
               </p>
             </div>
             <div>
               <h3 className="text-2xl font-bold mb-3">Misi</h3>
               <ul className="list-disc list-inside space-y-2 text-base md:text-lg">
                 <li>
-                  Mendorong pengembangan ilmu dan teknologi komputer bagi
-                  anggota.
+                  Penyelanggarakan pelatihan keterampilan yang relevan dengan
+                  kebutuhan anggota
                 </li>
                 <li>
-                  Menyelenggarakan kegiatan edukasi dan pengembangan soft skill.
+                  Menciptakan suasana yang serius namun santai dalam setiap
+                  kegiatan, agar semua anggota dapat berkontribusi tanpa
+                  tekanan.
                 </li>
-                <li>
-                  Membangun jaringan yang kuat antar mahasiswa dan alumni.
-                </li>
-                <li>
-                  Berperan aktif dalam kegiatan sosial dan kemasyarakatan.
-                </li>
-                <li>
-                  Menciptakan lingkungan belajar yang suportif dan inklusif.
-                </li>
+                <li>Meningkatkan komunikasi dan partisipasi aktif anggota</li>
               </ul>
             </div>
           </div>

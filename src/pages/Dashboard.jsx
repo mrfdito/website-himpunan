@@ -5,8 +5,10 @@ import EventList from "../components/EventList";
 import AnggotaForm from "../components/AnggotaForm";
 import AnggotaList from "../components/AnggotaList";
 
+// --- Main Dashboard Component ---
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("none");
+  const [activeTab, setActiveTab] = useState("anggota"); // Default tab is now 'anggota'
+  const [showForm, setShowForm] = useState(false);
 
   const [events, setEvents] = useState([]);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -14,6 +16,7 @@ const Dashboard = () => {
   const [anggota, setAnggota] = useState([]);
   const [editingAnggota, setEditingAnggota] = useState(null);
 
+  // --- Data Fetching and Mutations (No changes in logic) ---
   const fetchEvents = async () => {
     const { data, error } = await supabase
       .from("event")
@@ -45,107 +48,125 @@ const Dashboard = () => {
     fetchAnggota();
   }, []);
 
-  // Untuk switch view: list atau form
-  const [showForm, setShowForm] = useState(false);
-
-  // Hitung acara yang akan datang dan selesai
-  const today = new Date();
-  const upcomingEventsCount = events.filter(
-    (e) => new Date(e.tanggal) >= today
-  ).length;
-  const finishedEventsCount = events.filter(
-    (e) => new Date(e.tanggal) < today
-  ).length;
-
-  // Handler tambah data (buka form kosong)
+  // --- UI Action Handlers (No changes in logic) ---
   const handleAdd = () => {
     if (activeTab === "event") setEditingEvent(null);
     else if (activeTab === "anggota") setEditingAnggota(null);
     setShowForm(true);
   };
 
-  // Handler edit data (buka form isi data)
   const handleEdit = (item) => {
     if (activeTab === "event") setEditingEvent(item);
     else if (activeTab === "anggota") setEditingAnggota(item);
     setShowForm(true);
   };
 
-  // Batal (tutup form, kembali ke list)
   const handleCancel = () => {
     setShowForm(false);
     setEditingEvent(null);
     setEditingAnggota(null);
   };
 
+  // --- Calculated Values for Summary Cards ---
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize today's date
+  const upcomingEventsCount = events.filter(
+    (e) => new Date(e.tanggal) >= today
+  ).length;
+  const finishedEventsCount = events.length - upcomingEventsCount;
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    setShowForm(false); // Reset form visibility when switching tabs
+  };
+
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center sm:text-center">
-        Dashboard Admin
-      </h1>
+    <div className="bg-slate-100 min-h-screen">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6">
+        {/* Header */}
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-800">Dashboard Admin</h1>
+          <p className="text-slate-500 mt-1">
+            Selamat datang! Kelola anggota dan acara himpunan di sini.
+          </p>
+        </header>
 
-      {/* 3 Card kecil summary */}
-      <div className="flex justify-center gap-6 mb-8 flex-wrap">
-        <SmallCard title="Total Anggota" count={anggota.length} />
-        <SmallCard title="Acara Akan Datang" count={upcomingEventsCount} />
-        <SmallCard title="Acara Selesai" count={finishedEventsCount} />
-      </div>
-
-      {activeTab === "none" ? (
-        <div className="flex flex-col md:flex-row gap-6 justify-center">
-          <CardChoice
-            title="Anggota"
-            description="Tambah, edit, atau hapus anggota."
-            onStart={() => setActiveTab("anggota")}
-            emoji="👥"
+        {/* Summary Cards Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <SummaryCard
+            title="Total Anggota"
+            count={anggota.length}
+            icon={<UsersIcon />}
+            color="blue"
           />
-          <CardChoice
-            title="Acara"
-            description="Tambah, edit, atau hapus acara."
-            onStart={() => setActiveTab("event")}
-            emoji="📅"
+          <SummaryCard
+            title="Acara Akan Datang"
+            count={upcomingEventsCount}
+            icon={<CalendarUpcomingIcon />}
+            color="green"
+          />
+          <SummaryCard
+            title="Acara Selesai"
+            count={finishedEventsCount}
+            icon={<CalendarCheckIcon />}
+            color="purple"
           />
         </div>
-      ) : (
-        <>
-          <div className="flex justify-end space-x-4 mb-6 mr-0 md:mr-42">
-            {!showForm && (
-              <>
+
+        {/* Tab Navigation */}
+        <div className="flex border-b border-slate-200 mb-6">
+          <TabButton
+            label="Anggota"
+            isActive={activeTab === "anggota"}
+            onClick={() => handleTabClick("anggota")}
+          />
+          <TabButton
+            label="Acara"
+            isActive={activeTab === "event"}
+            onClick={() => handleTabClick("event")}
+          />
+        </div>
+
+        {/* Main Content Area */}
+        <div className="bg-white p-6 rounded-xl shadow-lg">
+          {/* Header for the content area */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-slate-700">
+              {showForm
+                ? editingAnggota || editingEvent
+                  ? "Edit "
+                  : "Tambah "
+                : "Daftar "}
+              {activeTab === "anggota" ? "Anggota" : "Acara"}
+            </h2>
+            <div>
+              {!showForm ? (
                 <button
                   onClick={handleAdd}
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded"
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors"
                 >
-                  Tambah
+                  <PlusIcon />
+                  <span>Tambah</span>
                 </button>
+              ) : (
                 <button
-                  onClick={() => {
-                    setActiveTab("none");
-                    setShowForm(false);
-                  }}
-                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded"
+                  onClick={handleCancel}
+                  className="flex items-center gap-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors"
                 >
-                  Keluar
+                  <BackIcon />
+                  <span>Batal</span>
                 </button>
-              </>
-            )}
-
-            {showForm && (
-              <button
-                onClick={handleCancel}
-                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-2 rounded"
-              >
-                Batal
-              </button>
-            )}
+              )}
+            </div>
           </div>
 
-          <div className="container max-w-4xl mx-auto bg-white p-4 rounded shadow">
+          {/* Conditional Rendering for Lists and Forms */}
+          <div className="transition-all duration-300">
             {!showForm && activeTab === "event" && (
               <EventList
                 events={events}
                 onEdit={handleEdit}
                 onDelete={handleDeleteEvent}
-                compact={true}
               />
             )}
             {!showForm && activeTab === "anggota" && (
@@ -153,53 +174,148 @@ const Dashboard = () => {
                 anggota={anggota}
                 onEdit={handleEdit}
                 onDelete={handleDeleteAnggota}
-                compact={true}
               />
             )}
-
             {showForm && activeTab === "event" && (
               <EventForm
                 editingEvent={editingEvent}
-                setEditingEvent={setEditingEvent}
                 onClose={handleCancel}
                 fetchEvents={fetchEvents}
               />
             )}
-
             {showForm && activeTab === "anggota" && (
               <AnggotaForm
                 editingAnggota={editingAnggota}
-                setEditingAnggota={setEditingAnggota}
                 onClose={handleCancel}
                 fetchAnggota={fetchAnggota}
               />
             )}
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
 
-const CardChoice = ({ title, description, onStart, emoji }) => (
-  <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-lg p-8 w-72">
-    <div className="text-6xl mb-4">{emoji}</div>
-    <h2 className="text-xl font-semibold mb-2 text-center">{title}</h2>
-    <p className="text-gray-600 mb-6 text-center">{description}</p>
-    <button
-      onClick={onStart}
-      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded"
+// --- Reusable UI Components ---
+
+const SummaryCard = ({ title, count, icon, color }) => {
+  const colors = {
+    blue: "border-blue-500 text-blue-600",
+    green: "border-green-500 text-green-600",
+    purple: "border-purple-500 text-purple-600",
+  };
+  return (
+    <div
+      className={`bg-white rounded-xl shadow-md p-6 border-t-4 ${colors[color]}`}
     >
-      Mulai
-    </button>
-  </div>
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-sm font-medium text-slate-500 uppercase">
+            {title}
+          </p>
+          <p className="text-3xl font-bold text-slate-800 mt-1">{count}</p>
+        </div>
+        <div className="text-4xl opacity-80">{icon}</div>
+      </div>
+    </div>
+  );
+};
+
+const TabButton = ({ label, isActive, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`px-4 py-2 text-sm font-semibold transition-colors duration-200 
+      ${
+        isActive
+          ? "border-b-2 border-blue-600 text-blue-600"
+          : "text-slate-500 hover:text-blue-600"
+      }`}
+  >
+    {label}
+  </button>
 );
 
-const SmallCard = ({ title, count }) => (
-  <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow px-8 py-6 min-w-[180px] text-center">
-    <p className="text-lg font-semibold mb-2">{title}</p>
-    <p className="text-3xl font-bold">{count}</p>
-  </div>
+// --- SVG Icons ---
+const UsersIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="w-8 h-8"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.5-2.962A3.75 3.75 0 0115 12a3.75 3.75 0 01-1.75 3.25m-3.75 0A3.75 3.75 0 016 12a3.75 3.75 0 011.75-3.25m0 6.5A3.75 3.75 0 009 12a3.75 3.75 0 00-1.75-3.25m-3.75 0A3.75 3.75 0 003 12a3.75 3.75 0 001.75 3.25m6.5 0A3.75 3.75 0 009 15a3.75 3.75 0 00-1.75 3.25m7.5-3.25A3.75 3.75 0 0015 15a3.75 3.75 0 001.75 3.25"
+    />
+  </svg>
+);
+const CalendarUpcomingIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="w-8 h-8"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M12 15.75h.008v.008H12v-.008z"
+    />
+  </svg>
+);
+const CalendarCheckIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="w-8 h-8"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+  </svg>
+);
+const PlusIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="w-5 h-5"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 4.5v15m7.5-7.5h-15"
+    />
+  </svg>
+);
+const BackIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="w-5 h-5"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
+    />
+  </svg>
 );
 
 export default Dashboard;
