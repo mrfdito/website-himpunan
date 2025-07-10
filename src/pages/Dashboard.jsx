@@ -80,7 +80,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center sm:text-left">
+      <h1 className="text-2xl font-bold mb-6 text-center sm:text-center">
         Dashboard Admin
       </h1>
 
@@ -108,7 +108,7 @@ const Dashboard = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-end space-x-4 mb-6">
+          <div className="flex justify-end space-x-4 mb-6 mr-0 md:mr-42">
             {!showForm && (
               <>
                 <button
@@ -139,7 +139,7 @@ const Dashboard = () => {
             )}
           </div>
 
-          <div className="bg-white p-4 rounded shadow">
+          <div className="container max-w-4xl mx-auto bg-white p-4 rounded shadow">
             {!showForm && activeTab === "event" && (
               <EventList
                 events={events}
@@ -182,9 +182,9 @@ const Dashboard = () => {
 };
 
 const CardChoice = ({ title, description, onStart, emoji }) => (
-  <div className="flex flex-col items-center justify-between bg-white rounded-lg shadow-md p-8 w-72">
+  <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-lg p-8 w-72">
     <div className="text-6xl mb-4">{emoji}</div>
-    <h2 className="text-xl font-semibold mb-2">{title}</h2>
+    <h2 className="text-xl font-semibold mb-2 text-center">{title}</h2>
     <p className="text-gray-600 mb-6 text-center">{description}</p>
     <button
       onClick={onStart}

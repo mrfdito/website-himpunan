@@ -29,27 +29,26 @@ const Home = () => {
         </div>
       </section>
 
-      {/* About Section - bg putih, teks biru tua */}
-      <section
-        id="about"
-        className="max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-20 bg-white text-blue-900"
-      >
-        <h2 className="text-3xl font-semibold mb-6 text-center">
-          Tentang Himpunan Kami
-        </h2>
-        <p className="text-center max-w-3xl mx-auto leading-relaxed text-base md:text-lg">
-          Himpunan Mahasiswa Ilmu Komputer Universitas Pertamina merupakan
-          organisasi yang bertujuan membangun solidaritas, mengembangkan
-          kemampuan akademik, serta memfasilitasi kreativitas mahasiswa Ilmu
-          Komputer. Kami rutin mengadakan berbagai kegiatan seperti seminar,
-          workshop, lomba, dan pengabdian masyarakat demi meningkatkan kualitas
-          dan semangat belajar para anggota.
-        </p>
+      {/* About Section */}
+      <section id="about" className="py-12 md:py-20 bg-white text-blue-900">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
+          <h2 className="text-3xl font-semibold mb-6 text-center">
+            Tentang Himpunan Kami
+          </h2>
+          <p className="text-center max-w-3xl mx-auto leading-relaxed text-base md:text-lg">
+            Himpunan Mahasiswa Ilmu Komputer Universitas Pertamina merupakan
+            organisasi yang bertujuan membangun solidaritas, mengembangkan
+            kemampuan akademik, serta memfasilitasi kreativitas mahasiswa Ilmu
+            Komputer. Kami rutin mengadakan berbagai kegiatan seperti seminar,
+            workshop, lomba, dan pengabdian masyarakat demi meningkatkan
+            kualitas dan semangat belajar para anggota.
+          </p>
+        </div>
       </section>
 
-      {/* Visi dan Misi Section - bg biru tua, teks putih */}
+      {/* Visi Misi */}
       <section className="bg-blue-900 text-white py-12">
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
           <h2 className="text-3xl font-semibold mb-8 text-center">
             Visi dan Misi
           </h2>
@@ -87,9 +86,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Himpunan Section - bg putih, teks biru tua */}
+      {/* Apa Itu Himpunan */}
       <section className="py-12 bg-white text-blue-900">
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
           <h2 className="text-3xl font-semibold mb-8 text-center">
             Apa Itu Himpunan?
           </h2>
@@ -119,11 +118,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Footer with Contact */}
-      <footer className="bg-blue-900 text-white py-10 px-6 md:px-20">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+      {/* Footer */}
+      <footer className="bg-blue-900 text-white py-10">
+        <div className="max-w-6xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {/* Logo */}
-          <div className="flex justify-center md:justify-start pl-10">
+          <div className="flex justify-center md:justify-start">
             <img
               src={logoFooter}
               alt="Logo Himpunan"
@@ -136,18 +135,18 @@ const Home = () => {
             <h4 className="text-xl font-semibold mb-2 text-center md:text-left">
               Alamat
             </h4>
-            <p className="text-gray-200 leading-relaxed max-w-xs mx-auto md:mx-0">
+            <p className="text-gray-200 leading-relaxed text-center md:text-left">
               Jl. Teuku Nyak Arief, RT.7/RW.8, Simprug, Kec. Kby. Lama, Kota
               Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12220
             </p>
           </div>
 
-          {/* Kontak Kami */}
+          {/* Kontak */}
           <div>
             <h4 className="text-xl font-semibold mb-2 text-center md:text-left">
               Kontak Kami
             </h4>
-            <ul className="text-gray-200 space-y-2 max-w-xs mx-auto md:mx-0">
+            <ul className="text-gray-200 space-y-2 text-center md:text-left">
               <li>
                 <span className="font-bold">Email:</span>{" "}
                 himpunan@ilkom.pertamina.ac.id

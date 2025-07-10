@@ -37,7 +37,7 @@ const AnggotaList = ({ anggota, onEdit, onDelete }) => {
   }
 
   return (
-    <div>
+    <div className="container max-w-4xl mx-auto px-4">
       {/* Filter dan Search */}
       <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
         <select

@@ -20,25 +20,27 @@ const CarouselEventList = ({ events }) => {
   const event = events[currentIndex];
 
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg bg-white">
+    <div className="w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl bg-white">
       <div className="relative">
         {event.gambar_url ? (
           <img
             src={event.gambar_url}
             alt={event.judul}
-            className="w-full h-80 object-cover" // Ukuran gambar diperbesar
+            className="w-full h-[400px] object-cover"
           />
         ) : (
-          <div className="w-full h-80 bg-gray-300 flex items-center justify-center text-gray-600">
+          <div className="w-full h-[400px] bg-gray-300 flex items-center justify-center text-gray-600 text-xl">
             Tidak ada gambar
           </div>
         )}
 
-        {/* Overlay gradient biru kiri ke kanan + teks putih */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-800/40 to-transparent flex items-end p-6">
-          <div className="text-white">
-            <h3 className="text-2xl md:text-3xl font-bold">{event.judul}</h3>
-            <p className="text-sm md:text-base mt-1">
+        {/* Overlay teks dan gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-800/50 to-transparent flex items-end p-8">
+          <div className="text-white max-w-xl">
+            <h3 className="text-3xl md:text-4xl font-extrabold">
+              {event.judul}
+            </h3>
+            <p className="text-base md:text-lg mt-2 font-medium">
               {new Date(event.tanggal).toLocaleDateString("id-ID", {
                 weekday: "long",
                 year: "numeric",
@@ -48,21 +50,21 @@ const CarouselEventList = ({ events }) => {
             </p>
             <button
               onClick={() => navigate(`/event/${event.id}`)}
-              className="mt-3 inline-block bg-white text-blue-700 font-semibold text-sm px-4 py-2 rounded hover:bg-blue-100 transition"
+              className="mt-4 inline-block bg-white text-blue-800 font-semibold text-base px-6 py-3 rounded-lg hover:bg-blue-100 transition-all duration-200"
             >
-              Detail →
+              Lihat Detail →
             </button>
           </div>
         </div>
       </div>
 
       {/* Dots navigasi */}
-      <div className="flex justify-center space-x-2 bg-gray-100 py-2">
+      <div className="flex justify-center space-x-3 bg-gray-100 py-4">
         {events.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx)}
-            className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+            className={`w-4 h-4 rounded-full transition-colors duration-300 ${
               currentIndex === idx ? "bg-blue-600" : "bg-gray-400"
             }`}
           ></button>

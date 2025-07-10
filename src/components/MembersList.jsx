@@ -58,7 +58,7 @@ const MemberList = () => {
   }, {});
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 text-center">
+    <div className="max-w-5xl mx-auto px-6 py-10 text-center">
       {Object.entries(posisiByDivisi).map(([divisi, posisiList]) => (
         <section key={divisi} className="mb-16">
           <h2 className="text-3xl font-extrabold mb-10 text-gray-900">

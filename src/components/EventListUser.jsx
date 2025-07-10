@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import CarouselEventList from "./CarouselEventList"; // import carousel
+import CarouselEventList from "./CarouselEventList";
 
 const EventListUser = () => {
   const [events, setEvents] = useState([]);
@@ -53,7 +53,6 @@ const EventListUser = () => {
     startIndex + itemsPerPage
   );
 
-  // Ambil 3 event terdekat untuk carousel (hanya event masa depan, ascending)
   const now = new Date();
   const upcomingEvents = events
     .filter((e) => new Date(e.tanggal) >= now)
@@ -61,13 +60,16 @@ const EventListUser = () => {
     .slice(0, 3);
 
   if (!events.length)
-    return <p className="text-center">Tidak ada event tersedia.</p>;
+    return <p className="text-center mt-10">Tidak ada event tersedia.</p>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Carousel dengan 3 event terdekat */}
-      <CarouselEventList events={upcomingEvents} />
+    <div className="container max-w-5xl mx-auto px-4 py-2">
+      {/* Carousel */}
+      <div className="mb-10">
+        <CarouselEventList events={upcomingEvents} />
+      </div>
 
+      {/* Header + Search + Sort */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 mt-8">
         <h2 className="text-3xl font-bold">Acara dan Berita</h2>
         <div className="flex gap-4">
@@ -92,7 +94,8 @@ const EventListUser = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      {/* Event Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
         {paginatedEvents.map((event) => (
           <div
             key={event.id}
@@ -146,7 +149,7 @@ const EventListUser = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex flex-wrap justify-center space-x-2">
+        <div className="flex flex-wrap justify-center gap-2 mt-6">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
