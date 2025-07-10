@@ -142,14 +142,13 @@ const Home = () => {
             </h4>
             <ul className="text-gray-200 space-y-2 text-center md:text-left">
               <li>
-                <span className="font-bold">Email:</span>{" "}
-                himpunan@ilkom.pertamina.ac.id
+                <span className="font-bold">Email:</span> hmik.uper@gmail.com
               </li>
               <li>
-                <span className="font-bold">Instagram:</span> @himpunan_ilkom
+                <span className="font-bold">Instagram:</span> @hmik.uper
               </li>
               <li>
-                <span className="font-bold">Telepon:</span> +62 812 3456 7890
+                <span className="font-bold">Line:</span> @tra85901
               </li>
             </ul>
           </div>
